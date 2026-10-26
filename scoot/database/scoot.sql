@@ -1,0 +1,82 @@
+-- SCOOT database. Import in HeidiSQL: File > Load SQL file > F9 (Run).
+-- WARNING: reset all SCOOT tables.
+CREATE DATABASE IF NOT EXISTS scoot CHARACTER SET utf8mb4;
+USE scoot;
+SET FOREIGN_KEY_CHECKS=0;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS admins;
+DROP TABLE IF EXISTS scooters;
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS rides;
+DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS settings;
+SET FOREIGN_KEY_CHECKS=1;
+
+CREATE TABLE users(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(120) NOT NULL UNIQUE,
+  phone VARCHAR(30),
+  pass VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE admins(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(120) NOT NULL UNIQUE,
+  pass VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE scooters(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(20) NOT NULL UNIQUE,
+  lat DOUBLE,
+  lng DOUBLE,
+  battery INT DEFAULT 100,
+  status VARCHAR(12) DEFAULT 'available',
+  reserved_by INT NULL,
+  reserved_until INT NULL,
+  FOREIGN KEY(reserved_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE payments(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  uid INT NOT NULL,
+  provider VARCHAR(30),
+  phone VARCHAR(30),
+  FOREIGN KEY(uid) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE rides(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  uid INT NOT NULL,
+  sid INT NOT NULL,
+  start INT,
+  end INT NULL,
+  cost INT NULL,
+  FOREIGN KEY(uid) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY(sid) REFERENCES scooters(id) ON DELETE CASCADE
+);
+
+CREATE TABLE messages(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  uid INT NOT NULL,
+  admin TINYINT DEFAULT 0,
+  body TEXT,
+  ts INT,
+  FOREIGN KEY(uid) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE settings(
+  k VARCHAR(30) PRIMARY KEY,
+  v VARCHAR(50)
+);
+
+INSERT INTO settings(k,v) VALUES('unlock','1000'),('per_min','300'),('min_bat','20'),('hold_min','10');
+INSERT INTO admins(email,pass) VALUES('admin@scoot.id','$2y$10$O6H3hwr1yja82un2re6ldeW3CC/70i51kruIa4o7Q/APrj/7nST4W'); -- password: admin123
+INSERT INTO scooters(code,lat,lng,battery) VALUES
+('8E3677B',-6.3622,106.8268,100),
+('4A91C20',-6.3615,106.8259,85),
+('7F20D3E',-6.3609,106.8249,64),
+('2B77A1C',-6.3603,106.8241,12),
+('9C45E8F',-6.3598,106.8236,90);

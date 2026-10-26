@@ -1,0 +1,569 @@
+/* ==========================================================================
+   1. VARIABLES & THEMES SETUP
+   ========================================================================== */
+:root {
+  --g: #00a651;
+  --mint: #B8E5C8;
+  --soft: #e8f6ee;
+  --ink: #1d2433;
+  --mut: #8a94a6;
+
+  /* Theme color defaults (Light) */
+  --bg: #ffffff;
+  --input: #f4faf7;
+  --border: #dde3ea;
+  --bub: #f1f1f1;
+  --nav: #000000;
+  
+  /* Menu item colors */
+  --cg: #b8e0c8;
+  --cy: #ffe3b0;
+  --cp: #e0c8e0;
+  --cb: #c8d8e4;
+  --co: #f3d3d0;
+}
+
+/* Dark Theme */
+html[data-theme="dark"] {
+  --bg: #121212;
+  --ink: #f1f1f1;
+  --soft: #1e2a24;
+  --input: #1c1c1c;
+  --border: #333333;
+  --mut: #9aa3b2;
+  --bub: #262626;
+  --nav: #262626;
+  --cg: #1f3d2d;
+  --cy: #4a3b1d;
+  --cp: #3b2a3b;
+  --cb: #243543;
+  --co: #4a2523;
+}
+
+/* Night Theme */
+html[data-theme="night"] {
+  --bg: #1a1410;
+  --ink: #f0dcc0;
+  --soft: #2a211a;
+  --input: #241c16;
+  --border: #3a2f25;
+  --mut: #a8957c;
+  --bub: #2d241c;
+  --nav: #120d09;
+  --cg: #2d3a22;
+  --cy: #4a3719;
+  --cp: #3d2a30;
+  --cb: #2b3138;
+  --co: #47261f;
+}
+
+/* Night Mode Overlay Filter */
+html[data-theme="night"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 150, 50, 0.14);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Leaflet Map Dark / Night Inversion */
+html[data-theme="dark"] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9);
+}
+html[data-theme="night"] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) sepia(0.6) brightness(0.75);
+}
+
+
+/* ==========================================================================
+   2. BASE & LAYOUT
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #444444;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 150%;
+  color: var(--ink);
+}
+
+.phone {
+  position: relative;
+  max-width: 420px;
+  min-height: 100vh;
+  margin: auto;
+  background: var(--bg);
+  color: var(--ink);
+  overflow: auto;
+  padding-bottom: 84px;
+  transition: background 0.25s, color 0.25s;
+}
+
+.center {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.pad {
+  padding: 24px;
+}
+
+.c { text-align: center; }
+.mut { color: var(--mut); }
+
+h1 {
+  font-size: 40px;
+  line-height: 48px;
+  font-weight: 600;
+  margin: 8px 24px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 6px 0 14px;
+}
+
+a {
+  color: var(--g);
+}
+
+
+/* ==========================================================================
+   3. COMPONENTS & FORMS
+   ========================================================================== */
+.logo { width: 120px; }
+.logo.sm { width: 64px; margin-bottom: 8px; }
+
+label {
+  display: block;
+  font-size: 13px;
+  margin: 12px 0 4px;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--input);
+  color: var(--ink);
+  transition: background 0.25s, border-color 0.25s, color 0.25s;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  border: 0;
+  border-radius: 12px;
+  background: #5fd18c;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn.sm {
+  width: auto;
+  display: inline-block;
+  margin: 0;
+  padding: 10px 22px;
+  border-radius: 20px;
+}
+
+.btn.x {
+  background: #fde8e8;
+  color: #b00020;
+}
+
+.err {
+  background: #fde8e8;
+  color: #b00020;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 8px 0;
+}
+
+.box {
+  background: var(--soft);
+  padding: 16px;
+  border-radius: 14px;
+  margin: 12px 0;
+  text-align: center;
+  transition: background 0.25s;
+}
+
+.big {
+  font-size: 56px;
+  font-weight: 800;
+  margin: 18px 0;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--soft);
+  margin: 10px 0;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 0.25s;
+}
+
+.item.g { background: var(--cg); }
+.item.y { background: var(--cy); }
+.item.p { background: var(--cp); }
+.item.b { background: var(--cb); }
+.item.o { background: var(--co); }
+
+.item.mi {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  padding: 14px 16px;
+}
+
+.item.mi svg { width: 22px; height: 22px; flex-shrink: 0; }
+.item.mi span { flex: 1; }
+.item.mi .chev { width: 18px; height: 18px; opacity: 0.5; }
+
+.item.pm { align-items: center; }
+
+.del {
+  background: none;
+  border: 0;
+  color: #b00020;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.del:hover {
+  background: rgba(176, 0, 32, 0.12);
+}
+
+
+/* ==========================================================================
+   4. NAVIGATION & BOTTOM SHEETS
+   ========================================================================== */
+nav {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(min(420px, 100%) - 32px);
+  background: var(--nav);
+  border-radius: 30px;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  z-index: 1000;
+  transition: background 0.25s;
+}
+
+nav a {
+  color: #bbb;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+nav a.on {
+  background: var(--mint);
+  color: #000000;
+  font-weight: 600;
+}
+
+nav svg { width: 22px; height: 22px; }
+
+.sheet {
+  position: absolute;
+  z-index: 999;
+  left: 16px;
+  right: 16px;
+  bottom: 96px;
+  background: var(--g);
+  color: #ffffff;
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sheet[hidden] { display: none; }
+.sheet small { display: block; opacity: 0.8; }
+.sheet .btn { background: #ffffff; color: var(--g); }
+
+.sheet.res {
+  bottom: auto;
+  top: 16px;
+  background: #000000;
+  gap: 8px;
+}
+
+.sheet form { margin: 0; }
+
+
+/* ==========================================================================
+   5. MAP & CAMERA SCANNER
+   ========================================================================== */
+#map {
+  height: 100vh;
+  background: #dddddd;
+}
+
+.pin {
+  font-size: 22px;
+  background: var(--g);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 34px;
+  border: 2px solid #ffffff;
+}
+
+.dark {
+  background: #5a5753;
+  min-height: 100%;
+  color: #ffffff;
+}
+
+.dark input {
+  background: #ffffff;
+  color: #000000;
+}
+
+.frame {
+  height: 300px;
+  border: 2px solid var(--mint);
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 20px 0;
+  background: #333333;
+}
+
+#cam {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* ==========================================================================
+  6. INBOX / CHAT SECTION (FIXED HEADER & FIXED INPUT FORM)
+   ========================================================================== */
+
+/* 1. Matikan scroll bawaan wadah telepon saat di halaman inbox */
+.phone.inbox {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important; /* Mencegah seluruh layar ter-scroll */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 2. Layout Pembungkus Chat */
+.pad.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px 20px 84px 20px; /* Padding 84px memberi ruang presisi untuk Bottom Nav */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 3. Header Scootmin (Terkunci Di Atas) */
+.chat-head {
+  flex-shrink: 0;
+  background: var(--bg);
+  padding-bottom: 10px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+
+.chat-head h2 {
+  margin: 0;
+}
+
+.chat small {
+  color: var(--g);
+  font-size: 12px;
+}
+
+/* 4. Area Bubble Pesan (SATU-SATUNYA ELEMEN YANG BISA DI-SCROLL) */
+.msgs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto !important; /* Memaksa scrollbar hanya muncul di sini */
+  padding: 12px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Base Bubble Pesan */
+.m {
+  padding: 10px 14px;
+  border-radius: 16px;
+  max-width: 78%;
+  word-break: break-word;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Pesan Admin (Kiri) */
+.m.a {
+  background: var(--bub);
+  color: var(--ink);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+/* Pesan User (Kanan) */
+.m.u {
+  background: var(--g);
+  color: #ffffff;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+/* 5. Form Input Pesan (Terkunci Di Bawah Di Atas Navigasi) */
+#chatf {
+  flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding-top: 10px;
+  margin-top: 4px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  z-index: 10;
+}
+
+#chatf input {
+  flex: 1;
+  border-radius: 20px;
+}
+
+/* FIX ANIMASI: Matikan animasi transform khusus halaman inbox agar flex layout mengunci sempurna */
+.phone.inbox > :not(nav) {
+  animation: none !important;
+  height: 100%;
+}
+
+/* ==========================================================================
+   7. ONBOARDING & THEMES SELECTOR
+   ========================================================================== */
+.slide {
+  display: none;
+  text-align: center;
+  padding-top: 90px;
+}
+
+.slide.on { display: block; }
+.slide p { color: var(--mut); margin: 12px 24px; font-size: 14px; }
+.art { height: 280px; }
+
+.foot {
+  position: absolute;
+  bottom: 30px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dots i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9px;
+  background: var(--mint);
+  margin-right: 5px;
+}
+
+.dots i.on {
+  width: 28px;
+  background: #4cc57e;
+}
+
+.themes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.themes button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: var(--soft);
+  color: var(--ink);
+  font: 600 14px inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.themes button.on { border-color: var(--g); }
+.themes svg { width: 22px; height: 22px; }
+
+
+/* ==========================================================================
+   8. ANIMATIONS
+   ========================================================================== */
+@keyframes inU {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes inR {
+  from { opacity: 0; transform: translateX(36px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes inL {
+  from { opacity: 0; transform: translateX(-36px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes outF {
+  to { opacity: 0; transform: translateX(var(--ox, -24px)); }
+}
+
+.phone > :not(nav) { animation: inU 0.35s ease both; }
+.phone.in-r > :not(nav) { animation-name: inR; }
+.phone.in-l > :not(nav) { animation-name: inL; }
+.phone.leave > :not(nav) { animation: outF 0.17s ease forwards; }
+
+.slide.on { animation: inR 0.35s ease both; }
+nav a.on { animation: inU 0.3s ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
